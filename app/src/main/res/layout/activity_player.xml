@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_gradient"
+    android:padding="20dp"
+    tools:context=".PlayerActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginBottom="20dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="@android:color/transparent"
+            android:tint="#FFFFFF"
+            android:contentDescription="Close player"/>
+
+        <TextView
+            android:id="@+id/txtPlaylistName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Now Playing"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+    <!-- ── ROW 2: ALBUM ART ── -->
+    <ImageView
+        android:id="@+id/imgPlayerAlbumArt"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingRight="35dp"
+        android:layout_marginBottom="28dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/glass_bg"
+        android:src="@drawable/musicl"
+        android:contentDescription="Album Art"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:id="@+id/txtPlayerSongTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Song Title"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/txtPlayerArtist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Artist Name"
+            android:textColor="#AAAAAA"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+    </LinearLayout>
+
+
+    <SeekBar
+        android:id="@+id/playerSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progressTint="#FFFFFF"
+        android:thumbTint="#FFFFFF"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="28dp">
+
+        <TextView
+            android:id="@+id/txtElapsed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="0:00"
+            android:textColor="#AAAAAA"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/txtDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="0:00"
+            android:textColor="#AAAAAA"
+            android:textSize="12sp"/>
+
+    </RelativeLayout>
+
+    <!-- ── ROW 5: GLASS CIRCLE CONTROLS ── -->
+    <!-- Shuffle | Prev | Play/Pause | Next | Repeat              -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="32dp">
+
+        <!-- Shuffle — left corner, smaller, dimmed when off -->
+        <ImageButton
+            android:id="@+id/btnShuffle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            android:background="@drawable/glass_circle_button"
+            android:tint="#FFFFFF"
+            android:alpha="0.45"
+            android:padding="12dp"
+            android:contentDescription="Shuffle"/>
+
+        <!-- Previous -->
+        <ImageButton
+            android:id="@+id/btnPrev"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="@drawable/glass_circle_button"
+            android:tint="#FFFFFF"
+            android:padding="16dp"
+            android:contentDescription="Previous"/>
+
+        <!-- Play / Pause — larger, centre -->
+        <ImageButton
+            android:id="@+id/btnPlayPause"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_media_pause"
+            android:background="@drawable/glass_circle_button"
+            android:tint="#FFFFFF"
+            android:padding="20dp"
+            android:contentDescription="Play or Pause"/>
+
+        <!-- Next -->
+        <ImageButton
+            android:id="@+id/btnNext"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_media_next"
+            android:background="@drawable/glass_circle_button"
+            android:tint="#FFFFFF"
+            android:padding="16dp"
+            android:contentDescription="Next"/>
+
+        <!-- Repeat — right corner, smaller, dimmed when off -->
+        <ImageButton
+            android:id="@+id/btnRepeat"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_rotate"
+            android:background="@drawable/glass_circle_button"
+            android:tint="#FFFFFF"
+            android:alpha="0.45"
+            android:padding="12dp"
+            android:contentDescription="Repeat"/>
+
+    </LinearLayout>
+
+</LinearLayout>

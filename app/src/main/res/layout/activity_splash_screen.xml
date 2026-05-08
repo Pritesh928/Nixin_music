@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- activity_splash.xml -->
+<!-- Place in res/layout/                                          -->
+<!-- Dark gradient background, centred logo + app name + tagline  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient">
+
+    <!-- CENTRE BLOCK: icon + app name + tagline -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- APP ICON / MUSIC NOTE -->
+        <ImageView
+            android:id="@+id/splashIcon"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/sscreens"
+            android:scaleType="fitCenter"
+            android:contentDescription="App Icon"/>
+
+        <!-- APP NAME -->
+        <TextView
+            android:id="@+id/splashTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Nixin"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"/>
+
+        <!-- TAGLINE -->
+        <TextView
+            android:id="@+id/splashTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Your music, your vibe"
+            android:textColor="#AAAAAA"
+            android:textSize="14sp"
+            android:letterSpacing="0.08"/>
+
+    </LinearLayout>
+
+    <!-- BOTTOM: loading dots / progress -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="64dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/splashProgress"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:indeterminateTint="#FFFFFF"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Loading…"
+            android:textColor="#888888"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
