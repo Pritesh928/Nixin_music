@@ -1,4 +1,3 @@
-
 package com.firstapp.nixin_music
 
 import android.view.LayoutInflater
@@ -16,21 +15,19 @@ class SongAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(song: Song, position: Int) {
-            binding.txtSongTitle.text = song.title
+            binding.txtSongTitle.text  = song.title
             binding.txtArtistName.text = song.artist
 
-            // Album art placeholder — swap with Glide when you have artwork URIs:
+            // Placeholder icon — replace with Glide for real album art:
             // Glide.with(binding.root).load(song.albumArtUri)
             //     .placeholder(R.drawable.ic_music_note)
             //     .into(binding.imgAlbumArt)
             binding.imgAlbumArt.setImageResource(android.R.drawable.ic_media_play)
 
-            // Row click → play song and open full player
             binding.root.setOnClickListener { onSongClick(position) }
 
-            // Three-dot menu (add PopupMenu here as needed)
             binding.btnMore.setOnClickListener {
-                // TODO: show context menu (add to playlist, share, etc.)
+                // TODO: PopupMenu (add to playlist, share, etc.)
             }
         }
     }

@@ -16,27 +16,33 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
 import androidx.media.app.NotificationCompat.MediaStyle
 import android.app.Service
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 
 class MusicService : Service() {
 
-    // ── BINDER ────────────────────────────────────────────────────────────────
+
     inner class MusicBinder : Binder() {
         fun getService(): MusicService = this@MusicService
     }
     private val binder = MusicBinder()
     override fun onBind(intent: Intent?): IBinder = binder
 
-    // ── MEDIA PLAYER ──────────────────────────────────────────────────────────
+
     private var mediaPlayer: MediaPlayer? = null
 
-    // ── MEDIA SESSION (powers the notification controls) ──────────────────────
+    private lateinit var audioManager: AudioManager
+    private var audioFocusRequest: AudioFocusRequest? = null
+
+
     private lateinit var mediaSession: MediaSessionCompat
 
-    // ── NOTIFICATION ──────────────────────────────────────────────────────────
+
     private val CHANNEL_ID   = "nixin_music_channel"
     private val NOTIFICATION_ID = 1
 
-    // Actions sent by notification buttons
+
     companion object {
         const val ACTION_PLAY_PAUSE = "com.firstapp.nixin_music.PLAY_PAUSE"
         const val ACTION_NEXT       = "com.firstapp.nixin_music.NEXT"
@@ -44,15 +50,19 @@ class MusicService : Service() {
         const val ACTION_STOP       = "com.firstapp.nixin_music.STOP"
     }
 
-    // ── LIFECYCLE ─────────────────────────────────────────────────────────────
+
     override fun onCreate() {
         super.onCreate()
+        createNotificationChannel()
+        setupMediaSession()
+        audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+
         createNotificationChannel()
         setupMediaSession()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Handle button taps from the notification
+
         when (intent?.action) {
             ACTION_PLAY_PAUSE -> if (isPlaying()) pauseSong() else resumeSong()
             ACTION_NEXT       -> MainActivity.let {
@@ -81,10 +91,50 @@ class MusicService : Service() {
         super.onDestroy()
         mediaPlayer?.release()
         mediaPlayer = null
+        audioFocusRequest?.let {
+            audioManager.abandonAudioFocusRequest(it)
+        }
         mediaSession.release()
     }
 
-    // ── MEDIA SESSION SETUP ───────────────────────────────────────────────────
+    private fun requestAudioFocus(): Boolean {
+
+        val focusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
+
+            when (focusChange) {
+
+                AudioManager.AUDIOFOCUS_LOSS -> {
+                    pauseSong()
+                    audioFocusRequest?.let {
+                        audioManager.abandonAudioFocusRequest(it)
+                    }
+                }
+
+                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                    pauseSong()
+                }
+
+                AudioManager.AUDIOFOCUS_GAIN -> {
+                    resumeSong()
+                }
+            }
+        }
+
+        audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            .setOnAudioFocusChangeListener(focusChangeListener)
+            .build()
+
+        val result = audioManager.requestAudioFocus(audioFocusRequest!!)
+
+        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+    }
+
     private fun setupMediaSession() {
         mediaSession = MediaSessionCompat(this, "NixinMusicSession").apply {
             setCallback(object : MediaSessionCompat.Callback() {
@@ -113,15 +163,16 @@ class MusicService : Service() {
         }
     }
 
-    // ── PLAY / PAUSE / RESUME ─────────────────────────────────────────────────
+
     fun playSong(path: String) {
+        if (!requestAudioFocus()) return
         mediaPlayer?.release()
         mediaPlayer = MediaPlayer().apply {
             setDataSource(path)
             prepare()
             start()
             setOnCompletionListener {
-                // Auto-advance to next song
+
                 MainActivity.let { main ->
                     if (main.currentIndex < main.songs.size - 1) {
                         main.currentIndex++
@@ -134,7 +185,7 @@ class MusicService : Service() {
         }
         updatePlaybackState(PlaybackStateCompat.STATE_PLAYING)
 
-        // Show / refresh notification with current song info
+
         val current = MainActivity.songs.getOrNull(MainActivity.currentIndex)
         if (current != null) updateNotification(current)
     }
@@ -147,10 +198,18 @@ class MusicService : Service() {
     }
 
     fun resumeSong() {
+
+        if (!requestAudioFocus()) return
+
         mediaPlayer?.start()
+
         updatePlaybackState(PlaybackStateCompat.STATE_PLAYING)
+
         val current = MainActivity.songs.getOrNull(MainActivity.currentIndex)
-        if (current != null) updateNotification(current)
+
+        if (current != null) {
+            updateNotification(current)
+        }
     }
 
     fun seekTo(position: Int)      { mediaPlayer?.seekTo(position) }
@@ -160,7 +219,7 @@ class MusicService : Service() {
     fun getCurrentPosition()       = mediaPlayer?.currentPosition ?: 0
     fun getDuration()              = mediaPlayer?.duration ?: 0
 
-    // ── PLAYBACK STATE (keeps lock-screen controls in sync) ───────────────────
+
     private fun updatePlaybackState(state: Int) {
         val playbackState = PlaybackStateCompat.Builder()
             .setActions(
@@ -175,7 +234,7 @@ class MusicService : Service() {
         mediaSession.setPlaybackState(playbackState)
     }
 
-    // ── BUILD & SHOW NOTIFICATION ─────────────────────────────────────────────
+
     private fun updateNotification(song: Song) {
         val notification = buildNotification(song)
         startForeground(NOTIFICATION_ID, notification)
@@ -183,7 +242,7 @@ class MusicService : Service() {
 
     private fun buildNotification(song: Song): Notification {
 
-        // Tapping the notification opens PlayerActivity
+
         val openPlayerIntent = Intent(this, PlayerActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             putExtra(PlayerActivity.EXTRA_INDEX, MainActivity.currentIndex)
@@ -193,37 +252,37 @@ class MusicService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Notification button: Previous
+
         val prevPending = PendingIntent.getService(
             this, 1,
             Intent(this, MusicService::class.java).setAction(ACTION_PREV),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Notification button: Play / Pause
+
         val playPausePending = PendingIntent.getService(
             this, 2,
             Intent(this, MusicService::class.java).setAction(ACTION_PLAY_PAUSE),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Notification button: Next
+
         val nextPending = PendingIntent.getService(
             this, 3,
             Intent(this, MusicService::class.java).setAction(ACTION_NEXT),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Play/Pause icon switches based on state
+
         val playPauseIcon = if (isPlaying())
             android.R.drawable.ic_media_pause
         else
             android.R.drawable.ic_media_play
 
-        // Album art placeholder (swap with real art via MediaMetadataRetriever if needed)
+
         val albumArt = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
 
-        // Update MediaSession metadata so lock screen shows correct info
+
         mediaSession.setMetadata(
             MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE,  song.title)
@@ -239,8 +298,8 @@ class MusicService : Service() {
             .setContentTitle(song.title)
             .setContentText(song.artist)
             .setContentIntent(contentPendingIntent)
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)  // shows on lock screen
-            .setOnlyAlertOnce(true)                               // no sound/vibrate on update
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setOnlyAlertOnce(true)
             .setSilent(true)
             .addAction(android.R.drawable.ic_media_previous, "Previous", prevPending)
             .addAction(playPauseIcon, "Play/Pause", playPausePending)
@@ -248,18 +307,18 @@ class MusicService : Service() {
             .setStyle(
                 MediaStyle()
                     .setMediaSession(mediaSession.sessionToken)
-                    .setShowActionsInCompactView(0, 1, 2)   // show all 3 in collapsed view
+                    .setShowActionsInCompactView(0, 1, 2)
             )
             .build()
     }
 
-    // ── NOTIFICATION CHANNEL (required Android 8+) ────────────────────────────
+
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Nixin Music Playback",
-                NotificationManager.IMPORTANCE_LOW      // LOW = no sound, no heads-up
+                NotificationManager.IMPORTANCE_LOW
             ).apply {
                 description = "Shows current song with playback controls"
                 setShowBadge(false)

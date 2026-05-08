@@ -7,121 +7,271 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient"
     android:paddingTop="20dp"
-    android:paddingBottom="20dp"
+    android:paddingRight="5dp"
+    android:paddingLeft="5dp"
+    android:paddingBottom="10dp"
     tools:context=".MainActivity">
 
-
+    <!-- AppBar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="@drawable/glass_bg"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:padding="0dp"
-            android:paddingEnd="8dp"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:titleTextColor="#FFFFFF"
-            app:title="🎵 𝐍𝐈𝐗𝐈𝐍"
-            app:navigationIcon="@null"/>
+            android:layout_height="64dp"
+            android:paddingStart="16dp"
+            android:background="@drawable/glass_bg"
+            android:paddingEnd="16dp"
+            app:navigationIcon="@null"
+            app:title="">
+
+            <!-- Custom Toolbar content -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- App Icon + Title -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="♪"
+                        android:textSize="26sp"
+                        android:textColor="#60EFFF"
+                        android:paddingEnd="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NIXIN"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            android:fontFamily="sans-serif-black"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.15"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Your Music"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="#80FFFFFF"
+                            android:textSize="11sp"
+                            android:letterSpacing="0.05"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Song count badge -->
+                <TextView
+                    android:id="@+id/songCountBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 songs"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="15sp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:fontFamily="sans-serif-black"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:background="@drawable/badge_bg"/>
+
+            </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <!-- Divider line under toolbar -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#15FFFFFF"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
+    <!-- Main content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <!-- Songs list header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="10dp">
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ALL SONGS"
+                android:textColor="#80FFFFFF"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-black"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"/>
+
+            <ImageButton
+                android:id="@+id/btnShuffle"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/ic_media_ff"
+                android:background="@android:color/transparent"
+                app:tint="#60EFFF"
+                android:contentDescription="Shuffle"/>
+
+        </LinearLayout>
+
+        <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerSongs"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:clipToPadding="false"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:paddingBottom="8dp"
             tools:listitem="@layout/item_song"/>
 
-
+        <!-- ═══════════════════════════════ MINI PLAYER ═══════════════════════════════ -->
         <LinearLayout
             android:id="@+id/miniPlayer"
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/glass_bg"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:visibility="gone"
             android:clickable="true"
             android:focusable="true">
 
+            <!-- Thin progress bar on top -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="#20FFFFFF">
 
-            <ImageView
-                android:id="@+id/miniAlbumArt"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/round_button"
-                android:src="@android:drawable/ic_media_play"/>
+                <View
+                    android:id="@+id/miniProgressFill"
+                    android:layout_width="0dp"
+                    android:layout_height="3dp"
+                    android:background="#60EFFF"/>
 
+            </FrameLayout>
 
+            <!-- Player row -->
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingStart="12dp"
-                android:paddingEnd="8dp">
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="8dp"
+                android:background="@drawable/glass_bg">
 
-                <TextView
-                    android:id="@+id/miniSongTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No Song Playing"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:maxLines="1"
-                    android:ellipsize="end"/>
+                <!-- Album Art -->
+                <FrameLayout
+                    android:layout_width="46dp"
+                    android:layout_height="46dp">
 
-                <TextView
-                    android:id="@+id/miniArtistName"
-                    android:layout_width="wrap_content"
+                    <ImageView
+                        android:id="@+id/miniAlbumArt"
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/music"
+                        />
+
+                </FrameLayout>
+
+                <!-- Song info -->
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Unknown Artist"
-                    android:textColor="#AAAAAA"
-                    android:textSize="12sp"
-                    android:maxLines="1"
-                    android:ellipsize="end"/>
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="8dp">
+
+                    <TextView
+                        android:id="@+id/miniSongTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No Song Playing"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:scrollHorizontally="true"/>
+
+                    <TextView
+                        android:id="@+id/miniArtistName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Unknown Artist"
+                        android:textColor="#80FFFFFF"
+                        android:textSize="12sp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:paddingTop="2dp"/>
+
+                </LinearLayout>
+
+                <!-- Controls -->
+                <ImageButton
+                    android:id="@+id/miniPrev"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_media_previous"
+                    android:background="@android:color/transparent"
+                    app:tint="#CCFFFFFF"
+                    android:contentDescription="Previous"/>
+
+                <ImageButton
+                    android:id="@+id/miniPlayPause"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@android:drawable/ic_media_pause"
+                    android:background="@drawable/play_btn_bg"
+                    app:tint="#FFFFFF"
+                    android:contentDescription="Play/Pause"/>
+
+                <ImageButton
+                    android:id="@+id/miniNext"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@android:drawable/ic_media_next"
+                    android:background="@android:color/transparent"
+                    app:tint="#CCFFFFFF"
+                    android:contentDescription="Next"/>
 
             </LinearLayout>
-
-            <!-- Mini Play/Pause -->
-            <ImageButton
-                android:id="@+id/miniPlayPause"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:src="@android:drawable/ic_media_pause"
-                android:background="@android:color/transparent"
-                android:tint="#FFFFFF"
-                android:contentDescription="Play/Pause"/>
-
-            <!-- Mini Next -->
-            <ImageButton
-                android:id="@+id/miniNext"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:src="@android:drawable/ic_media_next"
-                android:background="@android:color/transparent"
-                android:tint="#FFFFFF"
-                android:contentDescription="Next"/>
-
         </LinearLayout>
 
     </LinearLayout>
