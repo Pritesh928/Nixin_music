@@ -29,8 +29,7 @@
             android:layout_marginStart="12dp"
             android:scaleType="centerCrop"
             android:padding="10dp"
-            android:background="@drawable/play_button"
-            android:src="@android:drawable/ic_media_play"
+            android:src="@drawable/music"
             android:contentDescription="Album Art"/>
 
         <!-- Song Title -->

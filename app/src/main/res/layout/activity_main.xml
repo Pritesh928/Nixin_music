@@ -12,7 +12,7 @@
     android:paddingBottom="10dp"
     tools:context=".MainActivity">
 
-    <!-- AppBar -->
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,14 +29,13 @@
             app:navigationIcon="@null"
             app:title="">
 
-            <!-- Custom Toolbar content -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
-                <!-- App Icon + Title -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -79,7 +78,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Song count badge -->
+
                 <TextView
                     android:id="@+id/songCountBadge"
                     android:layout_width="wrap_content"
@@ -97,22 +96,18 @@
             </LinearLayout>
         </com.google.android.material.appbar.MaterialToolbar>
 
-        <!-- Divider line under toolbar -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#15FFFFFF"/>
+
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main content -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Songs list header -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -145,7 +140,7 @@
 
         </LinearLayout>
 
-        <!-- RecyclerView -->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerSongs"
             android:layout_width="match_parent"
@@ -157,7 +152,6 @@
             android:paddingBottom="8dp"
             tools:listitem="@layout/item_song"/>
 
-        <!-- ═══════════════════════════════ MINI PLAYER ═══════════════════════════════ -->
         <LinearLayout
             android:id="@+id/miniPlayer"
             android:layout_width="match_parent"
@@ -167,7 +161,7 @@
             android:clickable="true"
             android:focusable="true">
 
-            <!-- Thin progress bar on top -->
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
@@ -181,7 +175,7 @@
 
             </FrameLayout>
 
-            <!-- Player row -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
@@ -191,7 +185,7 @@
                 android:paddingEnd="8dp"
                 android:background="@drawable/glass_bg">
 
-                <!-- Album Art -->
+
                 <FrameLayout
                     android:layout_width="46dp"
                     android:layout_height="46dp">
@@ -206,7 +200,7 @@
 
                 </FrameLayout>
 
-                <!-- Song info -->
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -243,7 +237,7 @@
 
                 </LinearLayout>
 
-                <!-- Controls -->
+
                 <ImageButton
                     android:id="@+id/miniPrev"
                     android:layout_width="40dp"
