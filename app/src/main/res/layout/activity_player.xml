@@ -165,17 +165,13 @@
         </RelativeLayout>
 
     </LinearLayout>
-
-    <!-- ══════════════════════════════════════════
-         ROW 5 — PLAYBACK CONTROLS
-    ══════════════════════════════════════════ -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
         android:paddingTop="24dp"
         android:paddingBottom="8dp">
 
