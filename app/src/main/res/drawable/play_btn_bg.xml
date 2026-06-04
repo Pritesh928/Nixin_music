@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/drawable/play_btn_bg.xml -->
-<!-- Circular accent background for the mini player play/pause button -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <solid android:color="#3060EFFF"/>
-    <stroke android:width="1.5dp" android:color="#6060EFFF"/>
+    <solid android:color="#00FFFFFF"/>
+    <stroke android:width="1.5dp" android:color="#00FFFFFF"/>
 </shape>

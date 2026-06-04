@@ -18,17 +18,7 @@ class SongAdapter(
             binding.txtSongTitle.text  = song.title
             binding.txtArtistName.text = song.artist
 
-            // Placeholder icon — replace with Glide for real album art:
-            // Glide.with(binding.root).load(song.albumArtUri)
-            //     .placeholder(R.drawable.ic_music_note)
-            //     .into(binding.imgAlbumArt)
-            binding.imgAlbumArt.setImageResource(android.R.drawable.ic_media_play)
-
             binding.root.setOnClickListener { onSongClick(position) }
-
-            binding.btnMore.setOnClickListener {
-                // TODO: PopupMenu (add to playlist, share, etc.)
-            }
         }
     }
 

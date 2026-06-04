@@ -44,14 +44,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingRight="35dp"
+        android:padding="80dp"
         android:layout_marginBottom="28dp"
         android:scaleType="centerCrop"
-        android:background="@drawable/glass_bg"
-        android:src="@drawable/musicl"
+        android:src="@drawable/music"
         android:contentDescription="Album Art"/>
 
-    <!-- ── ROW 3: SONG TITLE + ARTIST ── -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

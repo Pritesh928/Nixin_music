@@ -27,19 +27,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val handler = Handler(Looper.getMainLooper())
 
-    // ── SEEKBAR + MINI PROGRESS UPDATE ───────────────────────────────────────
+
     private val updateLoop = object : Runnable {
         override fun run() {
             val service = musicService
             if (service != null) {
-                // Sync mini-player play/pause icon
                 if (service.isPlaying()) {
                     binding.miniPlayPause.setImageResource(android.R.drawable.ic_media_pause)
                 } else {
                     binding.miniPlayPause.setImageResource(android.R.drawable.ic_media_play)
                 }
 
-                // Update thin progress bar on top of mini player
+
                 val duration = service.getDuration()
                 if (duration > 0) {
                     val progress = service.getCurrentPosition().toFloat() / duration
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ── SERVICE CONNECTION ────────────────────────────────────────────────────
+
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicService.MusicBinder
@@ -89,28 +88,26 @@ class MainActivity : AppCompatActivity() {
 
         checkStoragePermission()
 
-        // ── MINI PLAYER CLICKS ────────────────────────────────────────────────
-        // Tap anywhere on bar → open full player
+
         binding.miniPlayer.setOnClickListener { openPlayer() }
 
-        // Play / Pause
         binding.miniPlayPause.setOnClickListener {
             musicService?.let { s ->
                 if (s.isPlaying()) s.pauseSong() else s.resumeSong()
             }
         }
 
-        // Previous
+
         binding.miniPrev.setOnClickListener {
             if (currentIndex > 0) { currentIndex--; playSong(currentIndex) }
         }
 
-        // Next
+
         binding.miniNext.setOnClickListener {
             if (currentIndex < songs.size - 1) { currentIndex++; playSong(currentIndex) }
         }
 
-        // Shuffle button in toolbar
+
         binding.btnShuffle.setOnClickListener {
             if (songs.isNotEmpty()) {
                 currentIndex = (songs.indices).random()
@@ -122,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         handler.post(updateLoop)
     }
 
-    // ── OPEN FULL PLAYER ──────────────────────────────────────────────────────
+
     private fun openPlayer() {
         if (songs.isEmpty()) return
         startActivity(
@@ -131,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    // ── LOAD SONGS FROM DEVICE ────────────────────────────────────────────────
+
     private fun loadSongs() {
         songs.clear()
 
@@ -152,7 +149,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Update song count badge
+
         binding.songCountBadge.text = "${songs.size} songs"
 
         val adapter = SongAdapter(songs) { position ->
@@ -163,7 +160,7 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerSongs.adapter = adapter
     }
 
-    // ── PLAY SONG ─────────────────────────────────────────────────────────────
+
     private fun playSong(index: Int) {
         if (songs.isEmpty()) return
         val song = songs[index]
@@ -175,7 +172,7 @@ class MainActivity : AppCompatActivity() {
         musicService?.playSong(song.path)
     }
 
-    // ── STORAGE PERMISSION ────────────────────────────────────────────────────
+
     private fun checkStoragePermission() {
         val perm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             Manifest.permission.READ_MEDIA_AUDIO
@@ -200,7 +197,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ── SERVICE LIFECYCLE ─────────────────────────────────────────────────────
+
     override fun onStart() {
         super.onStart()
         Intent(this, MusicService::class.java).also {
@@ -219,7 +216,6 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacks(updateLoop)
     }
 
-    // ── SHARED STATE (accessed by PlayerActivity & MusicService) ─────────────
     companion object {
         val songs = mutableListOf<Song>()
         var currentIndex = 0

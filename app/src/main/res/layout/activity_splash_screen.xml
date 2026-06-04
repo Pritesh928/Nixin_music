@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- activity_splash.xml -->
-<!-- Place in res/layout/                                          -->
-<!-- Dark gradient background, centred logo + app name + tagline  -->
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient">
 
-    <!-- CENTRE BLOCK: icon + app name + tagline -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,7 +13,6 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <!-- APP ICON / MUSIC NOTE -->
         <ImageView
             android:id="@+id/splashIcon"
             android:layout_width="96dp"

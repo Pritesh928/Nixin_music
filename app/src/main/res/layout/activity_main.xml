@@ -24,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:paddingStart="16dp"
-            android:background="@drawable/glass_bg"
             android:paddingEnd="16dp"
             app:navigationIcon="@null"
             app:title="">
@@ -122,7 +121,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="ALL SONGS"
+                android:text="Music Library"
                 android:textColor="#80FFFFFF"
                 android:textSize="15sp"
                 android:fontFamily="sans-serif-black"
@@ -135,7 +134,6 @@
                 android:layout_height="32dp"
                 android:src="@android:drawable/ic_media_ff"
                 android:background="@android:color/transparent"
-                app:tint="#60EFFF"
                 android:contentDescription="Shuffle"/>
 
         </LinearLayout>

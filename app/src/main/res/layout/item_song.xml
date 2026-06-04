@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/item_song.xml -->
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,70 +14,51 @@
     app:cardElevation="0dp">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="399dp"
         android:layout_height="64dp"
         android:gravity="center_vertical">
 
-        <!-- Album Art -->
         <ImageView
-            android:id="@+id/imgAlbumArt"
+            android:id="@+id/imgAlbum"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="12dp"
-            android:scaleType="centerCrop"
             android:padding="10dp"
-            android:src="@drawable/music"
-            android:contentDescription="Album Art"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/music" />
 
-        <!-- Song Title -->
         <TextView
             android:id="@+id/txtSongTitle"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/imgAlbumArt"
-            android:layout_toStartOf="@id/btnMore"
-            android:layout_alignTop="@id/imgAlbumArt"
+            android:layout_alignTop="@id/imgAlbum"
             android:layout_marginStart="14dp"
             android:layout_marginTop="4dp"
+            android:layout_toEndOf="@id/imgAlbum"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-black"
+            android:maxLines="1"
             android:text="Song Title"
             android:textColor="#FFFFFF"
-            android:fontFamily="sans-serif-black"
             android:textSize="14sp"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:ellipsize="end"/>
+            android:textStyle="bold" />
 
-        <!-- Artist Name -->
         <TextView
             android:id="@+id/txtArtistName"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/imgAlbumArt"
-            android:layout_toStartOf="@id/btnMore"
             android:layout_below="@id/txtSongTitle"
             android:layout_marginStart="14dp"
             android:layout_marginTop="3dp"
-            android:text="Artist"
+            android:layout_toEndOf="@id/imgAlbum"
+            android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
-            android:textColor="#80FFFFFF"
-            android:textSize="13sp"
             android:maxLines="1"
-            android:ellipsize="end"/>
-
-        <!-- Three-dot menu -->
-        <ImageButton
-            android:id="@+id/btnMore"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="6dp"
-            android:src="@android:drawable/arrow_down_float"
-            android:background="@drawable/play_btn_bg"
-            app:tint="#55FFFFFF"
-            android:contentDescription="More options"/>
+            android:text="Artist"
+            android:textColor="#80FFFFFF"
+            android:textSize="13sp" />
 
     </RelativeLayout>
 
