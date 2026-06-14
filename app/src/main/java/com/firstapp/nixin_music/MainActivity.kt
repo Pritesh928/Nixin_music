@@ -16,6 +16,7 @@ import android.os.Looper
 import android.provider.MediaStore
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -117,6 +118,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         handler.post(updateLoop)
+        findViewById<ImageButton>(R.id.searchpage).setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+        findViewById<ImageButton>(R.id.downloads).setOnClickListener {
+            startActivity(Intent(this, DownloadActivity::class.java))
+        }
+        findViewById<ImageButton>(R.id.library).setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
     }
 
 

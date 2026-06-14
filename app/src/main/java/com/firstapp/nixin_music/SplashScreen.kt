@@ -35,7 +35,7 @@ class SplashScreen : AppCompatActivity() {
 
         // Navigate to MainActivity after delay
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, SearchActivity::class.java))
             // Slide transition: new screen slides in from right, splash exits left
             overridePendingTransition(
                 android.R.anim.slide_in_left,

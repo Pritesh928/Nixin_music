@@ -266,6 +266,47 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Bottom Navigation -->
+        <LinearLayout
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:background="#00FFFFFF"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:gravity="center"
+            android:elevation="8dp">
+
+            <ImageButton
+                android:id="@+id/searchpage"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_weight="1"
+                android:src="@drawable/search"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"/>
+
+            <ImageButton
+                android:id="@+id/downloads"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_weight="1"
+                android:src="@drawable/download"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"/>
+
+            <ImageButton
+                android:id="@+id/library"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_weight="1"
+                android:src="@drawable/playlist"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
