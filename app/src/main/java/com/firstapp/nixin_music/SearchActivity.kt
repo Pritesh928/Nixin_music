@@ -31,14 +31,26 @@ class SearchActivity : AppCompatActivity() {
 
         // History data
         val historyItems = listOf(
-            HistoryItem("zaalima"),
-            HistoryItem("sirra"),
-            HistoryItem("primagen"),
-            HistoryItem("hor nach"),
-            HistoryItem("tmkoc 1474 ep"),
-            HistoryItem("cars 2 full movie in hindi"),
-            HistoryItem("deva deva song"),
-            HistoryItem("springboot")
+                HistoryItem("zaalima"),
+                HistoryItem("sirra"),
+                HistoryItem("guru randhawa songs"),
+                HistoryItem("karan aujla"),
+                HistoryItem("moonrise song"),
+                HistoryItem("primagen"),
+                HistoryItem("system design interview"),
+                HistoryItem("springboot"),
+                HistoryItem("microservices"),
+                HistoryItem("hor nach"),
+                HistoryItem("punjabi mashup"),
+                HistoryItem("tmkoc 1474 ep"),
+                HistoryItem("jethalal funny scenes"),
+                HistoryItem("cars 2 full movie in hindi"),
+                HistoryItem("cars 3 hindi"),
+                HistoryItem("deva deva song"),
+                HistoryItem("kesariya"),
+                HistoryItem("animal movie songs"),
+                HistoryItem("instagram reels viral songs"),
+                HistoryItem("trending punjabi songs")
         )
 
         historyRecycler.adapter = HistoryAdapter(historyItems)
