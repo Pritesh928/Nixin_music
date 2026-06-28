@@ -21,7 +21,6 @@
             android:scaleType="fitCenter"
             android:contentDescription="App Icon"/>
 
-        <!-- APP NAME -->
         <TextView
             android:id="@+id/splashTitle"
             android:layout_width="wrap_content"
@@ -33,7 +32,6 @@
             android:textStyle="bold"
             android:letterSpacing="0.05"/>
 
-        <!-- TAGLINE -->
         <TextView
             android:id="@+id/splashTagline"
             android:layout_width="wrap_content"
@@ -46,7 +44,6 @@
 
     </LinearLayout>
 
-    <!-- BOTTOM: loading dots / progress -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

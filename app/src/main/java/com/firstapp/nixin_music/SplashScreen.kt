@@ -14,13 +14,11 @@ class SplashScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashScreenBinding
 
-    // How long the splash stays visible (ms)
     private val SPLASH_DELAY = 2200L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Match full-screen glass effect used in MainActivity / PlayerActivity
         window.statusBarColor = Color.TRANSPARENT
         window.navigationBarColor = Color.TRANSPARENT
         window.setFlags(
@@ -33,10 +31,8 @@ class SplashScreen : AppCompatActivity() {
 
         animateViews()
 
-        // Navigate to MainActivity after delay
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this, SearchActivity::class.java))
-            // Slide transition: new screen slides in from right, splash exits left
             overridePendingTransition(
                 android.R.anim.slide_in_left,
                 android.R.anim.slide_out_right
@@ -45,9 +41,7 @@ class SplashScreen : AppCompatActivity() {
         }, SPLASH_DELAY)
     }
 
-    // ── ENTRY ANIMATIONS ──────────────────────────────────────────────────────
     private fun animateViews() {
-        // Icon: fade + scale up from centre
         binding.splashIcon.alpha = 0f
         binding.splashIcon.scaleX = 0.6f
         binding.splashIcon.scaleY = 0.6f
@@ -59,7 +53,6 @@ class SplashScreen : AppCompatActivity() {
             .setStartDelay(100)
             .start()
 
-        // Title: fade in + slide up slightly
         binding.splashTitle.alpha = 0f
         binding.splashTitle.translationY = 30f
         binding.splashTitle.animate()
@@ -69,7 +62,6 @@ class SplashScreen : AppCompatActivity() {
             .setStartDelay(350)
             .start()
 
-        // Tagline: fade in after title
         binding.splashTagline.alpha = 0f
         binding.splashTagline.animate()
             .alpha(1f)
@@ -78,10 +70,8 @@ class SplashScreen : AppCompatActivity() {
             .start()
     }
 
-    // Disable back-press on splash so user can't skip straight to MainActivity
-    // before the service / permission check is ready
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        // intentionally empty — prevent back skip
+        // intentionally empty — prevent back skip from application
     }
 }

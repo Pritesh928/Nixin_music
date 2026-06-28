@@ -12,7 +12,7 @@
     android:paddingBottom="10dp"
     tools:context=".DownloadActivity">
 
-    <!-- Header -->
+
     <TextView
         android:id="@+id/txtDownloads"
         android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <!-- Audio Chip -->
+
     <Button
         android:id="@+id/btnAudio"
         android:layout_width="wrap_content"
@@ -39,7 +39,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtDownloads"/>
 
-    <!-- Downloads List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/downloadRecycler"
         android:layout_width="0dp"
@@ -51,7 +50,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Bottom Navigation -->
     <LinearLayout
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"

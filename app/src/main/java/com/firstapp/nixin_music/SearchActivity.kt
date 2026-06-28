@@ -4,10 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import retrofit2.Response
+import retrofit2.Callback
 
 class SearchActivity : AppCompatActivity() {
 
@@ -23,40 +26,18 @@ class SearchActivity : AppCompatActivity() {
         historyRecycler = findViewById(R.id.historyRecycler)
         resultRecycler = findViewById(R.id.resultRecycler)
 
-
         val title = findViewById<View>(R.id.txtSearch)
 
         historyRecycler.layoutManager = LinearLayoutManager(this)
         resultRecycler.layoutManager = LinearLayoutManager(this)
 
-        // History data
         val historyItems = listOf(
-                HistoryItem("zaalima"),
-                HistoryItem("sirra"),
-                HistoryItem("guru randhawa songs"),
-                HistoryItem("karan aujla"),
-                HistoryItem("moonrise song"),
-                HistoryItem("primagen"),
-                HistoryItem("system design interview"),
-                HistoryItem("springboot"),
-                HistoryItem("microservices"),
-                HistoryItem("hor nach"),
-                HistoryItem("punjabi mashup"),
-                HistoryItem("tmkoc 1474 ep"),
-                HistoryItem("jethalal funny scenes"),
-                HistoryItem("cars 2 full movie in hindi"),
-                HistoryItem("cars 3 hindi"),
-                HistoryItem("deva deva song"),
-                HistoryItem("kesariya"),
-                HistoryItem("animal movie songs"),
-                HistoryItem("instagram reels viral songs"),
-                HistoryItem("trending punjabi songs")
+            HistoryItem("zaalima song")
         )
-
         historyRecycler.adapter = HistoryAdapter(historyItems)
 
-        findViewById<ImageButton>(R.id.downloads).setOnClickListener {
-            startActivity(Intent(this, DownloadActivity::class.java))
+        findViewById<ImageButton>(R.id.library).setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
         }
 
         findViewById<ImageButton>(R.id.library).setOnClickListener {
@@ -64,85 +45,39 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
-
             if (hasFocus) {
-
                 title.visibility = View.GONE
-
                 historyRecycler.visibility = View.VISIBLE
                 resultRecycler.visibility = View.GONE
             }
         }
 
-        searchView.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query.isNullOrBlank()) return false
 
-                override fun onQueryTextSubmit(query: String?): Boolean {
+                historyRecycler.visibility = View.GONE
+                resultRecycler.visibility = View.VISIBLE
 
-                    historyRecycler.visibility = View.GONE
-                    resultRecycler.visibility = View.VISIBLE
-
-                    val results = listOf(
-                        VideoItem(
-                            "Zaalima – Full Song",
-                            "03:11",
-                            "Sony Music India",
-                            R.drawable.music
-                        ),
-                        VideoItem(
-                            "Tera Hone Laga Hoon Lyrics",
-                            "04:59",
-                            "T-Series",
-                            R.drawable.music
-                        ),
-                        VideoItem(
-                            "Mai Rahoon Yaa Naa Rahoon - Lyrics",
-                            "03:55",
-                            "7clouds india",
-                            R.drawable.music
-                        ),
-                        VideoItem(
-                            "Dil Diya Gallan - Full Song",
-                            "04:34",
-                            "Atif Aslam",
-                            R.drawable.music
-                        ),
-                        VideoItem(
-                            "Sirra Official Song",
-                            "04:16",
-                            "Guru Randhawa",
-                            R.drawable.music
-                        ),
-                        VideoItem(
-                            "Azul - MV Song Video ",
-                            "03:50",
-                            "Guru Randhawa",
-                            R.drawable.music
-                        ),
-                        VideoItem(
-                            "Qatal Full Song",
-                            "05:00",
-                            "Guru Randhawa",
-                            R.drawable.music
-                        ),
-                        VideoItem(
-                            "For a Reason - Full Song",
-                            "04:00",
-                            "Karan Aujla",
-                            R.drawable.music
-                        )
-                    )
-
-                    resultRecycler.adapter =
-                        VideoAdapter(results)
-
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    return false
-                }
+                RetrofitClient.api.search(query).enqueue(object : Callback<List<VideoItem>> {
+                    override fun onResponse(
+                        p0: retrofit2.Call<List<VideoItem>>,
+                        response: Response<List<VideoItem>>
+                    ) {
+                        if (response.isSuccessful) {
+                            val results = response.body() ?: emptyList()
+                            resultRecycler.adapter = VideoAdapter(results)
+                        } else {
+                            Toast.makeText(this@SearchActivity, "Search failed", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    override fun onFailure(p0: retrofit2.Call<List<VideoItem>>, t: Throwable) {
+                        Toast.makeText(this@SearchActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
+                return true
             }
-        )
+            override fun onQueryTextChange(newText: String?) = false
+        })
     }
 }
