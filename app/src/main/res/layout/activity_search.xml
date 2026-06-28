@@ -22,7 +22,8 @@
         android:textColor="#FFFFFF"
         android:textSize="44sp"
         android:textStyle="bold"
-        android:padding="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,6 +35,8 @@
         android:layout_margin="16dp"
         android:background="@drawable/glass_bg"
         android:queryHint="Search music..."
+        app:iconifiedByDefault="false"
+        android:padding="-10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtSearch" />
