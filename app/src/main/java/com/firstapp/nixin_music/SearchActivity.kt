@@ -35,8 +35,12 @@ class SearchActivity : AppCompatActivity() {
         val history = prefs.getStringSet("queries", emptySet())!!.toList()
         historyRecycler.adapter = HistoryAdapter(history.map { HistoryItem(it) })
 
+        findViewById<ImageButton>(R.id.searchpage).setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+
         findViewById<ImageButton>(R.id.downloads).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, DownloadActivity::class.java))
         }
 
         findViewById<ImageButton>(R.id.library).setOnClickListener {

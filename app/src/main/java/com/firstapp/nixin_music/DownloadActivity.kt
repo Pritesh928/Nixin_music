@@ -26,11 +26,103 @@ class DownloadActivity : AppCompatActivity() {
                 "T-Series",
                 R.drawable.music
             ),
+
+            DownloadSong(
+                "Midnight Drive",
+                "Neon Beats",
+                R.drawable.music
+            ),
+
+            DownloadSong(
+                "Summer Vibes",
+                "DJ Nova",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Lost in Rhythm",
+                "Echo Sound",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Dream Chaser",
+                "Skyline Records",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Fire Within",
+                "Pulse Music",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Ocean Breeze",
+                "Blue Waves",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Golden Hour",
+                "Sunset Studio",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Electric Love",
+                "Voltage Beats",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Moonlight Melody",
+                "Harmony House",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Endless Journey",
+                "Infinity Tunes",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Heartbeat",
+                "Rhythm Nation",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Silent Echoes",
+                "Acoustic Souls",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "City Lights",
+                "Urban Records",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Beyond the Sky",
+                "Cloud Nine",
+                R.drawable.music
+            ),
+            
+            DownloadSong(
+                "Rise Again",
+                "Epic Sound",
+                R.drawable.music
+            ),
+            
             DownloadSong(
                 "Kesariya",
                 "Sony Music",
                 R.drawable.music
             ),
+
             DownloadSong(
                 "Heeriye",
                 "T-Series",
