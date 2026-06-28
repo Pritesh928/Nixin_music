@@ -9,8 +9,8 @@
     android:background="@drawable/bg_gradient"
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
-    android:paddingTop="26dp"
-    android:paddingBottom="26dp"
+    android:paddingTop="36dp"
+    android:paddingBottom="40dp"
     tools:context=".PlayerActivity">
 
     <RelativeLayout
@@ -76,8 +76,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="28dp"
-        android:paddingEnd="16dp"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
         android:paddingTop="20dp"
         android:paddingBottom="4dp">
 
@@ -181,7 +181,7 @@
             android:layout_height="44dp"
             android:layout_weight="1"
             android:src="@android:drawable/ic_menu_sort_by_size"
-            android:background="@drawable/glass_circle_small"
+            android:background="#00FFFFFF"
             android:alpha="0.5"
             android:padding="11dp"
             android:contentDescription="Shuffle"/>
@@ -193,7 +193,7 @@
             android:layout_height="56dp"
             android:layout_weight="1"
             android:src="@android:drawable/ic_media_previous"
-            android:background="@drawable/glass_circle_button"
+            android:background="#00FFFFFF"
             android:padding="14dp"
             android:contentDescription="Previous"/>
 
@@ -202,16 +202,12 @@
             android:layout_height="76dp"
             android:layout_weight="1">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="76dp"
-                android:background="@drawable/play_glow_ring" />
 
             <ImageButton
                 android:id="@+id/btnPlayPause"
                 android:layout_width="match_parent"
                 android:layout_height="76dp"
-                android:background="@drawable/glass_bg"
+                android:background="#00FFFFFF"
                 android:contentDescription="Play or Pause"
                 android:padding="18dp"
                 android:src="@android:drawable/ic_media_pause" />
@@ -224,7 +220,7 @@
             android:layout_height="56dp"
             android:layout_weight="1"
             android:src="@android:drawable/ic_media_next"
-            android:background="@drawable/glass_circle_button"
+            android:background="#00FFFFFF"
             android:padding="14dp"
             android:contentDescription="Next"/>
 
@@ -234,7 +230,7 @@
             android:layout_height="44dp"
             android:layout_weight="1"
             android:src="@android:drawable/ic_menu_rotate"
-            android:background="@drawable/glass_circle_small"
+            android:background="#00FFFFFF"
             android:alpha="0.5"
             android:padding="11dp"
             android:contentDescription="Repeat"/>
