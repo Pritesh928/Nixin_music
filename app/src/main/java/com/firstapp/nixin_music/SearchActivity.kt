@@ -31,12 +31,11 @@ class SearchActivity : AppCompatActivity() {
         historyRecycler.layoutManager = LinearLayoutManager(this)
         resultRecycler.layoutManager = LinearLayoutManager(this)
 
-        val historyItems = listOf(
-            HistoryItem("zaalima song")
-        )
-        historyRecycler.adapter = HistoryAdapter(historyItems)
+        val prefs = getSharedPreferences("search_history", MODE_PRIVATE)
+        val history = prefs.getStringSet("queries", emptySet())!!.toList()
+        historyRecycler.adapter = HistoryAdapter(history.map { HistoryItem(it) })
 
-        findViewById<ImageButton>(R.id.library).setOnClickListener {
+        findViewById<ImageButton>(R.id.downloads).setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }
 
@@ -58,6 +57,12 @@ class SearchActivity : AppCompatActivity() {
 
                 historyRecycler.visibility = View.GONE
                 resultRecycler.visibility = View.VISIBLE
+
+                val preferences = getSharedPreferences("search_history", MODE_PRIVATE)
+                val history = preferences.getStringSet("queries", mutableSetOf())!!.toMutableSet()
+                history.add(query)
+                preferences.edit().putStringSet("queries",history).apply()
+
 
                 RetrofitClient.api.search(query).enqueue(object : Callback<List<VideoItem>> {
                     override fun onResponse(
