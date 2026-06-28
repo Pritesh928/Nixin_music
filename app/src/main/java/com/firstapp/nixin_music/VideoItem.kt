@@ -1,8 +1,7 @@
 package com.firstapp.nixin_music
 
-data class VideoItem(
+data class VideoItem (
+    val videoId: String,
     val title: String,
-    val duration: String,
-    val channel: String,
-    val thumbnailRes: Int
+    val thumbnail: String,
 )
