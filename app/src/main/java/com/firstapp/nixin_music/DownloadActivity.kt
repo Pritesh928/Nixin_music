@@ -142,4 +142,11 @@ class DownloadActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+//        prevent back skip from application
+        findViewById<ImageButton>(R.id.searchpage).setOnClickListener {
+            startActivity(Intent(this, DownloadActivity::class.java))
+        }
+    }
 }

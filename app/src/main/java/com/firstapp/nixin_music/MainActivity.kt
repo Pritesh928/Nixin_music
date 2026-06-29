@@ -232,4 +232,11 @@ class MainActivity : AppCompatActivity() {
         var musicService: MusicService? = null
         var isBound = false
     }
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+//        prevent back skip from application
+        findViewById<ImageButton>(R.id.searchpage).setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+    }
 }
