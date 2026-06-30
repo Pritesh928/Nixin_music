@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.firstapp.nixin_music.MainActivity.Companion.musicService
 import retrofit2.Response
 import retrofit2.Callback
 
@@ -17,6 +18,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchView: SearchView
     private lateinit var historyRecycler: RecyclerView
     private lateinit var resultRecycler: RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

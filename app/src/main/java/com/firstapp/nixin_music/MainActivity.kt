@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firstapp.nixin_music.databinding.ActivityMainBinding
+import kotlin.compareTo
 
 class MainActivity : AppCompatActivity() {
 
@@ -182,6 +183,17 @@ class MainActivity : AppCompatActivity() {
         musicService?.playSong(song.path)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (musicService?.isPlaying() == true || currentIndex > 0 && songs.isNotEmpty()) {
+            val song = songs.getOrNull(currentIndex)
+            if (song != null) {
+                binding.miniPlayer.visibility = View.VISIBLE
+                binding.miniSongTitle.text = song.title
+                binding.miniArtistName.text = song.artist
+            }
+        }
+    }
 
     private fun checkStoragePermission() {
         val perm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -213,6 +225,12 @@ class MainActivity : AppCompatActivity() {
         Intent(this, MusicService::class.java).also {
             bindService(it, serviceConnection, Context.BIND_AUTO_CREATE)
             startService(it)
+        }
+
+        val preferences = getSharedPreferences("music_state", MODE_PRIVATE)
+        val savedIndex = preferences.getInt("last_index", -1)
+        if(savedIndex >= 0 && songs.isNotEmpty()) {
+            currentIndex = savedIndex
         }
     }
 

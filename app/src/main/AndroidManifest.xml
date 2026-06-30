@@ -42,9 +42,11 @@
             android:theme="@style/Theme.NixinMusic.NoActionBar" />
         <activity
             android:name=".PlayerActivity"
-            android:exported="false"
-            android:theme="@style/Theme.NixinMusic.NoActionBar" />
-
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
         <service
             android:name=".MusicService"
             android:enabled="true"

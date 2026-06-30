@@ -1,12 +1,25 @@
-override fun onResume() {
-    super.onResume()
-    // Restore mini player if music is already playing
-    if (musicService?.isPlaying() == true || currentIndex > 0 && songs.isNotEmpty()) {
-        val song = songs.getOrNull(currentIndex)
-        if (song != null) {
-            binding.miniPlayer.visibility = View.VISIBLE
-            binding.miniSongTitle.text = song.title
-            binding.miniArtistName.text = song.artist
+setOnCompletionListener {
+    MainActivity.let { main ->
+        when {
+            // Repeat: replay same song
+            isRepeatOn -> {
+                playSong(main.songs[main.currentIndex].path)
+                updateNotification(main.songs[main.currentIndex])
+            }
+            // Shuffle: pick random song
+            isShuffleOn -> {
+                main.currentIndex = (main.songs.indices).random()
+                val next = main.songs[main.currentIndex]
+                playSong(next.path)
+                updateNotification(next)
+            }
+            // Normal: play next
+            main.currentIndex < main.songs.size - 1 -> {
+                main.currentIndex++
+                val next = main.songs[main.currentIndex]
+                playSong(next.path)
+                updateNotification(next)
+            }
         }
     }
 }

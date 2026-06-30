@@ -27,27 +27,23 @@ class MusicService : Service() {
         fun getService(): MusicService = this@MusicService
     }
     private val binder = MusicBinder()
-    override fun onBind(intent: Intent?): IBinder = binder
 
+    override fun onBind(intent: Intent?): IBinder = binder
 
     private var mediaPlayer: MediaPlayer? = null
 
     private lateinit var audioManager: AudioManager
     private var audioFocusRequest: AudioFocusRequest? = null
-
-
     private lateinit var mediaSession: MediaSessionCompat
-
-
     private val CHANNEL_ID   = "nixin_music_channel"
     private val NOTIFICATION_ID = 1
-
-
     companion object {
         const val ACTION_PLAY_PAUSE = "com.firstapp.nixin_music.PLAY_PAUSE"
         const val ACTION_NEXT       = "com.firstapp.nixin_music.NEXT"
         const val ACTION_PREV       = "com.firstapp.nixin_music.PREV"
         const val ACTION_STOP       = "com.firstapp.nixin_music.STOP"
+        var isShuffleOn = "false"
+        var isRepeatOn = "false"
     }
 
 
@@ -165,20 +161,36 @@ class MusicService : Service() {
 
 
     fun playSong(path: String) {
+        val preferences = getSharedPreferences("music_state", MODE_PRIVATE)
+        preferences.edit()
+            .putInt("last_index", MainActivity.currentIndex)
+            .apply()
         if (!requestAudioFocus()) return
         mediaPlayer?.release()
         mediaPlayer = MediaPlayer().apply {
             setDataSource(path)
             prepare()
             start()
-            setOnCompletionListener {
 
+            setOnCompletionListener {
                 MainActivity.let { main ->
-                    if (main.currentIndex < main.songs.size - 1) {
-                        main.currentIndex++
-                        val next = main.songs[main.currentIndex]
-                        playSong(next.path)
-                        updateNotification(next)
+                    when {
+                        isRepeatOn -> {
+                            playSong(main.songs[main.currentIndex].path)
+                            updateNotification(main.songs[main.currentIndex])
+                        }
+                        isShuffleOn -> {
+                            main.currentIndex = (main.songs.indices).random()
+                            val next = main.songs[main.currentIndex]
+                            playSong(next.path)
+                            updateNotification(next)
+                        }
+                        main.currentIndex < main.songs.size - 1 -> {
+                            main.currentIndex++
+                            val next = main.songs[main.currentIndex]
+                            playSong(next.path)
+                            updateNotification(next)
+                        }
                     }
                 }
             }
