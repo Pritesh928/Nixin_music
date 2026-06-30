@@ -1,0 +1,12 @@
+override fun onResume() {
+    super.onResume()
+    // Restore mini player if music is already playing
+    if (musicService?.isPlaying() == true || currentIndex > 0 && songs.isNotEmpty()) {
+        val song = songs.getOrNull(currentIndex)
+        if (song != null) {
+            binding.miniPlayer.visibility = View.VISIBLE
+            binding.miniSongTitle.text = song.title
+            binding.miniArtistName.text = song.artist
+        }
+    }
+}
