@@ -19,6 +19,7 @@ import android.app.Service
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
+import androidx.annotation.RequiresApi
 
 class MusicService : Service() {
 
@@ -37,13 +38,14 @@ class MusicService : Service() {
     private lateinit var mediaSession: MediaSessionCompat
     private val CHANNEL_ID   = "nixin_music_channel"
     private val NOTIFICATION_ID = 1
+    var onSongChanged : ((Song) -> Unit)? = null
     companion object {
         const val ACTION_PLAY_PAUSE = "com.firstapp.nixin_music.PLAY_PAUSE"
         const val ACTION_NEXT       = "com.firstapp.nixin_music.NEXT"
         const val ACTION_PREV       = "com.firstapp.nixin_music.PREV"
         const val ACTION_STOP       = "com.firstapp.nixin_music.STOP"
-        var isShuffleOn = "false"
-        var isRepeatOn = "false"
+        var isShuffleOn = false
+        var isRepeatOn = false
     }
 
 
@@ -57,6 +59,7 @@ class MusicService : Service() {
         setupMediaSession()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         when (intent?.action) {
@@ -83,6 +86,7 @@ class MusicService : Service() {
         return START_STICKY
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer?.release()
@@ -93,6 +97,7 @@ class MusicService : Service() {
         mediaSession.release()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun requestAudioFocus(): Boolean {
 
         val focusChangeListener = AudioManager.OnAudioFocusChangeListener { focusChange ->
@@ -134,8 +139,10 @@ class MusicService : Service() {
     private fun setupMediaSession() {
         mediaSession = MediaSessionCompat(this, "NixinMusicSession").apply {
             setCallback(object : MediaSessionCompat.Callback() {
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onPlay()     { resumeSong() }
                 override fun onPause()    { pauseSong()  }
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onSkipToNext() {
                     MainActivity.let {
                         if (it.currentIndex < it.songs.size - 1) {
@@ -145,6 +152,7 @@ class MusicService : Service() {
                         }
                     }
                 }
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onSkipToPrevious() {
                     MainActivity.let {
                         if (it.currentIndex > 0) {
@@ -160,6 +168,7 @@ class MusicService : Service() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun playSong(path: String) {
         val preferences = getSharedPreferences("music_state", MODE_PRIVATE)
         preferences.edit()
@@ -176,20 +185,24 @@ class MusicService : Service() {
                 MainActivity.let { main ->
                     when {
                         isRepeatOn -> {
+                            val next = main.songs[main.currentIndex]
                             playSong(main.songs[main.currentIndex].path)
                             updateNotification(main.songs[main.currentIndex])
+                            onSongChanged?.invoke(next)
                         }
                         isShuffleOn -> {
                             main.currentIndex = (main.songs.indices).random()
                             val next = main.songs[main.currentIndex]
                             playSong(next.path)
                             updateNotification(next)
+                            onSongChanged?.invoke(next)
                         }
                         main.currentIndex < main.songs.size - 1 -> {
                             main.currentIndex++
                             val next = main.songs[main.currentIndex]
                             playSong(next.path)
                             updateNotification(next)
+                            onSongChanged?.invoke(next)
                         }
                     }
                 }
@@ -209,9 +222,10 @@ class MusicService : Service() {
         if (current != null) updateNotification(current)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun resumeSong() {
 
-        if (!requestAudioFocus()) return
+        if (! requestAudioFocus()) return
 
         mediaPlayer?.start()
 

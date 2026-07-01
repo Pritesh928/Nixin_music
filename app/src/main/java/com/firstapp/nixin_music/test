@@ -1,25 +1,15 @@
-setOnCompletionListener {
-    MainActivity.let { main ->
-        when {
-            // Repeat: replay same song
-            isRepeatOn -> {
-                playSong(main.songs[main.currentIndex].path)
-                updateNotification(main.songs[main.currentIndex])
-            }
-            // Shuffle: pick random song
-            isShuffleOn -> {
-                main.currentIndex = (main.songs.indices).random()
-                val next = main.songs[main.currentIndex]
-                playSong(next.path)
-                updateNotification(next)
-            }
-            // Normal: play next
-            main.currentIndex < main.songs.size - 1 -> {
-                main.currentIndex++
-                val next = main.songs[main.currentIndex]
-                playSong(next.path)
-                updateNotification(next)
-            }
+override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+    val binder = service as MusicService.MusicBinder
+    MainActivity.musicService = binder.getService()
+    isBound = true
+    setupSeekBar()
+    
+    // Wire the callback so UI updates when song auto-changes
+    MainActivity.musicService?.onSongChanged = { song ->
+        runOnUiThread {
+            binding.txtPlayerSongTitle.text = song.title
+            binding.txtPlayerArtist.text = song.artist
+            setupSeekBar()
         }
     }
 }

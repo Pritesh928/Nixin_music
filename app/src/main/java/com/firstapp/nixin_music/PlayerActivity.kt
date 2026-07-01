@@ -5,12 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.view.WindowManager
 import android.widget.SeekBar
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.firstapp.nixin_music.databinding.ActivityPlayerBinding
 
@@ -18,8 +20,6 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
     private val handler = Handler(Looper.getMainLooper())
-
-    // Reference shared state from MainActivity companion
     private val songs get() = MainActivity.songs
     private var currentIndex
         get() = MainActivity.currentIndex
@@ -46,11 +46,12 @@ class PlayerActivity : AppCompatActivity() {
             val binder = service as MusicService.MusicBinder
             MainActivity.musicService = binder.getService()
             isBound = true
-            setupSeekBar()           // set max once service is ready
+            setupSeekBar()
         }
         override fun onServiceDisconnected(name: ComponentName?) { isBound = false }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -121,6 +122,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.txtPlaylistName.text = "My Music"
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun playSong(index: Int) {
         if (songs.isEmpty()) return
         val song = songs[index]
