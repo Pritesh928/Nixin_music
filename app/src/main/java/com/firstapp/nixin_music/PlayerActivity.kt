@@ -46,7 +46,15 @@ class PlayerActivity : AppCompatActivity() {
             val binder = service as MusicService.MusicBinder
             MainActivity.musicService = binder.getService()
             isBound = true
-            setupSeekBar()
+            handler.postDelayed({ setupSeekBar() }, 500)
+
+            MainActivity.musicService?.onSongChanged = { song ->
+                runOnUiThread {
+                    binding.txtPlayerSongTitle.text = song.title
+                    binding.txtPlayerArtist.text = song.artist
+                    handler.postDelayed({ setupSeekBar() }, 500)
+                }
+            }
         }
         override fun onServiceDisconnected(name: ComponentName?) { isBound = false }
     }
@@ -74,6 +82,7 @@ class PlayerActivity : AppCompatActivity() {
             if (isTaskRoot) {
                 startActivity(Intent(this, MainActivity::class.java))
             }
+            finish()
         }
 
         binding.btnPlayPause.setOnClickListener {
@@ -153,6 +162,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        MainActivity.musicService?.onSongChanged = null
         if (isBound) { unbindService(serviceConnection); isBound = false }
     }
 

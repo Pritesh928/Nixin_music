@@ -64,21 +64,36 @@ class MusicService : Service() {
 
         when (intent?.action) {
             ACTION_PLAY_PAUSE -> if (isPlaying()) pauseSong() else resumeSong()
-            ACTION_NEXT       -> MainActivity.let {
-                if (it.currentIndex < it.songs.size - 1) {
-                    it.currentIndex++
-                    playSong(it.songs[it.currentIndex].path)
-                    updateNotification(it.songs[it.currentIndex])
+            ACTION_NEXT -> MainActivity.let {
+                when {
+                    isShuffleOn -> {
+                        it.currentIndex = (it.songs.indices).random()
+                    }
+                    it.currentIndex < it.songs.size - 1 -> {
+                        it.currentIndex++
+                    }
+                    else -> return@let
                 }
+                playSong(it.songs[it.currentIndex].path)
+                updateNotification(it.songs[it.currentIndex])
+                onSongChanged?.invoke(it.songs[it.currentIndex])
             }
-            ACTION_PREV       -> MainActivity.let {
-                if (it.currentIndex > 0) {
-                    it.currentIndex--
-                    playSong(it.songs[it.currentIndex].path)
-                    updateNotification(it.songs[it.currentIndex])
+
+            ACTION_PREV -> MainActivity.let {
+                when {
+                    isShuffleOn -> {
+                        it.currentIndex = (it.songs.indices).random()
+                    }
+                    it.currentIndex > 0 -> {
+                        it.currentIndex--
+                    }
+                    else -> return@let
                 }
+                playSong(it.songs[it.currentIndex].path)
+                updateNotification(it.songs[it.currentIndex])
+                onSongChanged?.invoke(it.songs[it.currentIndex])
             }
-            ACTION_STOP       -> {
+            ACTION_STOP -> {
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
             }
@@ -180,7 +195,6 @@ class MusicService : Service() {
             setDataSource(path)
             prepare()
             start()
-
             setOnCompletionListener {
                 MainActivity.let { main ->
                     when {
@@ -209,8 +223,6 @@ class MusicService : Service() {
             }
         }
         updatePlaybackState(PlaybackStateCompat.STATE_PLAYING)
-
-
         val current = MainActivity.songs.getOrNull(MainActivity.currentIndex)
         if (current != null) updateNotification(current)
     }
