@@ -22,8 +22,6 @@ import android.media.AudioManager
 import androidx.annotation.RequiresApi
 
 class MusicService : Service() {
-
-
     inner class MusicBinder : Binder() {
         fun getService(): MusicService = this@MusicService
     }
@@ -94,6 +92,9 @@ class MusicService : Service() {
                 onSongChanged?.invoke(it.songs[it.currentIndex])
             }
             ACTION_STOP -> {
+                mediaPlayer?.stop()
+                mediaPlayer?.release()
+                mediaPlayer = null
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
             }
@@ -280,7 +281,6 @@ class MusicService : Service() {
 
     private fun buildNotification(song: Song): Notification {
 
-
         val openPlayerIntent = Intent(this, PlayerActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
             putExtra(PlayerActivity.EXTRA_INDEX, MainActivity.currentIndex)
@@ -289,29 +289,26 @@ class MusicService : Service() {
             this, 0, openPlayerIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
-
         val prevPending = PendingIntent.getService(
             this, 1,
             Intent(this, MusicService::class.java).setAction(ACTION_PREV),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
-
         val playPausePending = PendingIntent.getService(
             this, 2,
             Intent(this, MusicService::class.java).setAction(ACTION_PLAY_PAUSE),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
-
         val nextPending = PendingIntent.getService(
             this, 3,
             Intent(this, MusicService::class.java).setAction(ACTION_NEXT),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
-
+        val stopPending = PendingIntent.getService(
+            this, 4,
+            Intent(this, MusicService::class.java).setAction(ACTION_STOP),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         val playPauseIcon = if (isPlaying())
             android.R.drawable.ic_media_pause
         else
@@ -342,10 +339,11 @@ class MusicService : Service() {
             .addAction(android.R.drawable.ic_media_previous, "Previous", prevPending)
             .addAction(playPauseIcon, "Play/Pause", playPausePending)
             .addAction(android.R.drawable.ic_media_next, "Next", nextPending)
+            .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Stop", stopPending)
             .setStyle(
                 MediaStyle()
                     .setMediaSession(mediaSession.sessionToken)
-                    .setShowActionsInCompactView(0, 1, 2)
+                    .setShowActionsInCompactView(0, 1, 2, 3)
             )
             .build()
     }
