@@ -17,12 +17,12 @@ import android.provider.MediaStore
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageButton
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firstapp.nixin_music.databinding.ActivityMainBinding
-import kotlin.compareTo
 
 class MainActivity : AppCompatActivity() {
 
@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         override fun onServiceDisconnected(name: ComponentName?) { isBound = false }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -90,7 +91,6 @@ class MainActivity : AppCompatActivity() {
 
         checkStoragePermission()
 
-
         binding.miniPlayer.setOnClickListener { openPlayer() }
 
         binding.miniPlayPause.setOnClickListener {
@@ -99,16 +99,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         binding.miniPrev.setOnClickListener {
             if (currentIndex > 0) { currentIndex--; playSong(currentIndex) }
         }
 
-
         binding.miniNext.setOnClickListener {
             if (currentIndex < songs.size - 1) { currentIndex++; playSong(currentIndex) }
         }
-
 
         binding.btnShuffle.setOnClickListener {
             if (songs.isNotEmpty()) {
@@ -140,6 +137,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun loadSongs() {
         songs.clear()
 
@@ -172,6 +170,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun playSong(index: Int) {
         if (songs.isEmpty()) return
         val song = songs[index]
@@ -195,6 +194,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun checkStoragePermission() {
         val perm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
             Manifest.permission.READ_MEDIA_AUDIO
@@ -208,6 +208,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
@@ -252,9 +253,7 @@ class MainActivity : AppCompatActivity() {
     }
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-//        prevent back skip from application
-        findViewById<ImageButton>(R.id.searchpage).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
+        // Just minimize app instead of closing when back pressed
+        moveTaskToBack(true)
     }
 }
