@@ -7,4 +7,7 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("api/search")
     fun search(@Query("q") query: String): Call<List<VideoItem>>
+
+    @GET("api/stream")
+    fun getStreamUrl(@Query("id") videoId: String): Call<String>
 }
