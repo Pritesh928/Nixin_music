@@ -39,31 +39,25 @@ class VideoAdapter(
             .into(holder.thumb)
 
         holder.itemView.setOnClickListener {
-            val context = holder.itemView.context
-            Toast.makeText(context, "Loading ${item.title}...", Toast.LENGTH_SHORT).show()
+            holder.itemView.animate()
+                .scaleX(0.95f).scaleY(0.95f).setDuration(100)
+                .withEndAction {
+                    holder.itemView.animate()
+                        .scaleX(1f).scaleY(1f).setDuration(100).start()
+                }.start()
 
-            RetrofitClient.api.getStreamUrl(item.videoId)
-                .enqueue(object : retrofit2.Callback<String> {
-                    override fun onResponse(
-                        call: retrofit2.Call<String>,
-                        response: retrofit2.Response<String>
-                    ) {
-                        if (response.isSuccessful) {
-                            val streamUrl = response.body() ?: return
-                            val intent = Intent(context, StreamPlayerActivity::class.java).apply {
-                                putExtra("STREAM_URL", streamUrl)
-                                putExtra("SONG_TITLE", item.title)
-                                putExtra("THUMBNAIL", item.thumbnail)
-                            }
-                            context.startActivity(intent)
-                        } else {
-                            Toast.makeText(context, "Failed to get stream", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    override fun onFailure(call: retrofit2.Call<String>, t: Throwable) {
-                        Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                    }
-                })
+            val context = holder.itemView.context
+
+            val videoListJson = com.google.gson.Gson().toJson(videos)
+
+            val intent = Intent(context, StreamPlayerActivity::class.java).apply {
+                putExtra("VIDEO_ID", item.videoId)
+                putExtra("SONG_TITLE", item.title)
+                putExtra("THUMBNAIL", item.thumbnail)
+                putExtra("CURRENT_POSITION", position)
+                putExtra("VIDEO_LIST", videoListJson)  // pass full list
+            }
+            context.startActivity(intent)
         }
     }
 

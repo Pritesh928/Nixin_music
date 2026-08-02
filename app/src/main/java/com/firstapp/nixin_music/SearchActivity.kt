@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firstapp.nixin_music.MainActivity.Companion.musicService
 import retrofit2.Response
 import retrofit2.Callback
+import android.widget.ProgressBar
+
 
 class SearchActivity : AppCompatActivity() {
 
@@ -29,6 +31,7 @@ class SearchActivity : AppCompatActivity() {
         resultRecycler = findViewById(R.id.resultRecycler)
 
         val title = findViewById<View>(R.id.txtSearch)
+        val searchProgress = findViewById<ProgressBar>(R.id.searchProgress)
 
         historyRecycler.layoutManager = LinearLayoutManager(this)
         resultRecycler.layoutManager = LinearLayoutManager(this)
@@ -63,6 +66,8 @@ class SearchActivity : AppCompatActivity() {
 
                 historyRecycler.visibility = View.GONE
                 resultRecycler.visibility = View.VISIBLE
+                searchProgress.visibility = View.VISIBLE
+                resultRecycler.visibility = View.GONE
 
                 val preferences = getSharedPreferences("search_history", MODE_PRIVATE)
                 val history = preferences.getStringSet("queries", mutableSetOf())!!.toMutableSet()
@@ -75,6 +80,8 @@ class SearchActivity : AppCompatActivity() {
                         p0: retrofit2.Call<List<VideoItem>>,
                         response: Response<List<VideoItem>>
                     ) {
+                        searchProgress.visibility = View.GONE
+                        resultRecycler.visibility = View.VISIBLE
                         if (response.isSuccessful) {
                             val results = response.body() ?: emptyList()
                             resultRecycler.adapter = VideoAdapter(results)
@@ -83,6 +90,7 @@ class SearchActivity : AppCompatActivity() {
                         }
                     }
                     override fun onFailure(p0: retrofit2.Call<List<VideoItem>>, t: Throwable) {
+                        searchProgress.visibility = View.GONE
                         Toast.makeText(this@SearchActivity, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                 })
