@@ -32,10 +32,15 @@ class StreamMusicService : Service() {
         const val NOTIFICATION_ID = 2
         const val ACTION_PLAY_PAUSE = "stream.PLAY_PAUSE"
         const val ACTION_STOP = "stream.STOP"
+        var currentStreamTitle = ""
+        var currentStreamThumbnail = ""
+        var currentVideoId = ""
+        var instance: StreamMusicService? = null
     }
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
         createNotificationChannel()
         player = ExoPlayer.Builder(this).build()
 
@@ -66,9 +71,12 @@ class StreamMusicService : Service() {
         return START_STICKY
     }
 
-    fun playSong(streamUrl: String, title: String, thumbnail: String) {
+    fun playSong(streamUrl: String, title: String, thumbnail: String, videoId: String = "") {
         currentTitle = title
         currentThumbnail = thumbnail
+        currentStreamTitle = title
+        currentStreamThumbnail = thumbnail
+        currentVideoId = videoId
         player.setMediaItem(MediaItem.fromUri(streamUrl))
         player.prepare()
         player.play()
@@ -87,7 +95,10 @@ class StreamMusicService : Service() {
         val openIntent = PendingIntent.getActivity(
             this, 0,
             Intent(this, StreamPlayerActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                putExtra("SONG_TITLE", currentTitle)
+                putExtra("THUMBNAIL", currentThumbnail)
+                putExtra("FROM_NOTIFICATION", true)
             },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -140,6 +151,7 @@ class StreamMusicService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        instance = null
         player.release()
     }
 }

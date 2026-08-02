@@ -5,9 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/bg_gradient"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
     android:paddingTop="36dp"
     android:paddingBottom="40dp">
-    
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -22,8 +24,7 @@
             android:layout_centerVertical="true"
             android:src="@android:drawable/ic_menu_close_clear_cancel"
             android:background="#00FFFFFF"
-            android:padding="10dp"
-            android:contentDescription="Close"/>
+            android:padding="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,16 +39,48 @@
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/imgStreamThumb"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="100dp"
-        android:layout_marginBottom="8dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/music"
-        android:contentDescription="Thumbnail"/>
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:id="@+id/imgStreamThumb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="24dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/music"/>
+
+        <LinearLayout
+            android:id="@+id/loadingOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="#88000000"
+            android:visibility="visible">
+
+            <ProgressBar
+                android:id="@+id/streamLoadingBar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:indeterminateTint="#60EFFF"/>
+
+            <TextView
+                android:id="@+id/txtLoadingStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Loading..."
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -149,8 +182,7 @@
             android:layout_weight="1"
             android:src="@android:drawable/ic_media_previous"
             android:background="#00FFFFFF"
-            android:padding="14dp"
-            android:contentDescription="Previous"/>
+            android:padding="14dp"/>
 
         <FrameLayout
             android:layout_width="76dp"
@@ -163,8 +195,7 @@
                 android:layout_height="76dp"
                 android:background="#00FFFFFF"
                 android:padding="18dp"
-                android:src="@android:drawable/ic_media_pause"
-                android:contentDescription="Play Pause"/>
+                android:src="@android:drawable/ic_media_pause"/>
 
         </FrameLayout>
 
@@ -175,8 +206,7 @@
             android:layout_weight="1"
             android:src="@android:drawable/ic_media_next"
             android:background="#00FFFFFF"
-            android:padding="14dp"
-            android:contentDescription="Next"/>
+            android:padding="14dp"/>
 
     </LinearLayout>
 

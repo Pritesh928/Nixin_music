@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.view.View
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -22,7 +24,6 @@ class StreamPlayerActivity : AppCompatActivity() {
     private var streamService: StreamMusicService? = null
     private var isBound = false
     private val handler = Handler(Looper.getMainLooper())
-
     private var videoList = listOf<VideoItem>()
     private var currentPosition = 0
 
@@ -39,8 +40,21 @@ class StreamPlayerActivity : AppCompatActivity() {
 
             streamService?.onSongEnded = { runOnUiThread { playNextSong() } }
 
+            if (streamService?.isPlaying() == true) {
+                hideLoading()
+                val title = StreamMusicService.currentStreamTitle
+                val thumb = StreamMusicService.currentStreamThumbnail
+                if (title.isNotEmpty()) {
+                    findViewById<TextView>(R.id.txtStreamTitle).text = title
+                    Glide.with(this@StreamPlayerActivity)
+                        .load(thumb).placeholder(R.drawable.music)
+                        .into(findViewById(R.id.imgStreamThumb))
+                }
+            }
+
             handler.post(updateSeekBar)
         }
+
         override fun onServiceDisconnected(name: ComponentName?) {
             isBound = false
         }
@@ -50,13 +64,12 @@ class StreamPlayerActivity : AppCompatActivity() {
         override fun run() {
             streamService?.let { s ->
                 val duration = s.getDuration().takeIf { it > 0 } ?: 0
-                val position = s.getCurrentPosition()
-
+                val pos = s.getCurrentPosition()
                 findViewById<SeekBar>(R.id.streamSeekBar).apply {
                     max = duration.toInt()
-                    progress = position.toInt()
+                    progress = pos.toInt()
                 }
-                findViewById<TextView>(R.id.txtStreamElapsed).text = formatTime(position)
+                findViewById<TextView>(R.id.txtStreamElapsed).text = formatTime(pos)
                 findViewById<TextView>(R.id.txtStreamDuration).text = formatTime(duration)
                 findViewById<ImageButton>(R.id.btnStreamPlayPause)
                     .setImageResource(
@@ -84,18 +97,14 @@ class StreamPlayerActivity : AppCompatActivity() {
         currentPosition = intent.getIntExtra("CURRENT_POSITION", lastPosition)
         lastPosition = currentPosition
 
+        val fromNotification = intent.getBooleanExtra("FROM_NOTIFICATION", false)
         val videoId = intent.getStringExtra("VIDEO_ID")
-        val title = intent.getStringExtra("SONG_TITLE") ?: ""
-        val thumbnail = intent.getStringExtra("THUMBNAIL") ?: ""
+        val title = intent.getStringExtra("SONG_TITLE") ?: StreamMusicService.currentStreamTitle
+        val thumbnail = intent.getStringExtra("THUMBNAIL") ?: StreamMusicService.currentStreamThumbnail
 
         findViewById<TextView>(R.id.txtStreamTitle).text = title
         Glide.with(this).load(thumbnail).placeholder(R.drawable.music)
             .into(findViewById(R.id.imgStreamThumb))
-
-        Intent(this, StreamMusicService::class.java).also {
-            startService(it)
-            bindService(it, serviceConnection, Context.BIND_AUTO_CREATE)
-        }
 
         findViewById<ImageButton>(R.id.btnStreamBack).setOnClickListener { finish() }
         findViewById<ImageButton>(R.id.btnStreamPlayPause).setOnClickListener {
@@ -112,19 +121,34 @@ class StreamPlayerActivity : AppCompatActivity() {
                 override fun onStopTrackingTouch(sb: SeekBar?) {}
             })
 
-        if (videoId != null) {
+        Intent(this, StreamMusicService::class.java).also {
+            startService(it)
+            bindService(it, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
+
+        if (!fromNotification && videoId != null) {
+            showLoading("Loading...")
             loadSong(videoId, title, thumbnail)
         } else {
-            streamService?.let {
-                findViewById<TextView>(R.id.txtStreamTitle).text = it.currentTitle
-            }
+            hideLoading()
         }
     }
 
-    private fun loadSong(videoId: String, title: String, thumbnail: String) {
-        val loadingText = findViewById<TextView>(R.id.txtStreamSource)
-        loadingText.text = "Loading..."
+    private fun showLoading(message: String) {
+        findViewById<LinearLayout>(R.id.loadingOverlay).visibility = View.VISIBLE
+        findViewById<TextView>(R.id.txtLoadingStatus).text = message
         findViewById<ImageButton>(R.id.btnStreamPlayPause).isEnabled = false
+        findViewById<SeekBar>(R.id.streamSeekBar).isEnabled = false
+    }
+
+    private fun hideLoading() {
+        findViewById<LinearLayout>(R.id.loadingOverlay).visibility = View.GONE
+        findViewById<ImageButton>(R.id.btnStreamPlayPause).isEnabled = true
+        findViewById<SeekBar>(R.id.streamSeekBar).isEnabled = true
+    }
+
+    private fun loadSong(videoId: String, title: String, thumbnail: String) {
+        showLoading("Loading...")
 
         RetrofitClient.api.getStreamUrl(videoId)
             .enqueue(object : retrofit2.Callback<String> {
@@ -134,26 +158,20 @@ class StreamPlayerActivity : AppCompatActivity() {
                 ) {
                     if (response.isSuccessful) {
                         val streamUrl = response.body() ?: return
-                        loadingText.text = "YouTube"
-                        findViewById<ImageButton>(R.id.btnStreamPlayPause).isEnabled = true
-
-                        // Play through service so it survives activity close
-                        streamService?.playSong(streamUrl, title, thumbnail)
-
-                        // Update UI
+                        hideLoading()
+                        streamService?.playSong(streamUrl, title, thumbnail, videoId)
                         findViewById<TextView>(R.id.txtStreamTitle).text = title
                         Glide.with(this@StreamPlayerActivity)
                             .load(thumbnail).placeholder(R.drawable.music)
                             .into(findViewById(R.id.imgStreamThumb))
-
                     } else {
-                        loadingText.text = "Failed — skipping"
-                        playNextSong()
+                        showLoading("Failed — skipping")
+                        handler.postDelayed({ playNextSong() }, 1500)
                     }
                 }
                 override fun onFailure(call: retrofit2.Call<String>, t: Throwable) {
-                    loadingText.text = "Error — skipping"
-                    playNextSong()
+                    showLoading("Error — skipping")
+                    handler.postDelayed({ playNextSong() }, 1500)
                 }
             })
     }
@@ -163,7 +181,6 @@ class StreamPlayerActivity : AppCompatActivity() {
         currentPosition = (currentPosition + 1) % videoList.size
         lastPosition = currentPosition
         val next = videoList[currentPosition]
-        Toast.makeText(this, "Next: ${next.title}", Toast.LENGTH_SHORT).show()
         loadSong(next.videoId, next.title, next.thumbnail)
     }
 
