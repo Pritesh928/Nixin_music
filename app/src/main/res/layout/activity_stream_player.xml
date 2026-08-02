@@ -5,8 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/bg_gradient"
-    android:paddingStart="10dp"
-    android:paddingEnd="10dp"
     android:paddingTop="36dp"
     android:paddingBottom="40dp">
     
@@ -45,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="24dp"
+        android:padding="100dp"
         android:layout_marginBottom="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/music"
