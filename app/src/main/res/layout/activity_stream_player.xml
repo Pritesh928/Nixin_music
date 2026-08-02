@@ -59,14 +59,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="#88000000"
+            android:background="#00000000"
             android:visibility="visible">
 
             <ProgressBar
                 android:id="@+id/streamLoadingBar"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:indeterminateTint="#60EFFF"/>
+                android:indeterminateTint="#29000000"/>
 
             <TextView
                 android:id="@+id/txtLoadingStatus"
